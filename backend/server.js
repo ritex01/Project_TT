@@ -8,13 +8,21 @@ const app = express();
 const server = http.createServer(app);
 const allowedOrigins = [
   'http://localhost:5173',
-  process.env.FRONTEND_URL
+  process.env.FRONTEND_URL,
+  'https://project-tt-silk.vercel.app'
 ].filter(Boolean);
 
 const io = new Server(server, {
   cors: { 
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'] 
+    origin: function(origin, callback) {
+      if (!origin || origin.startsWith('http://localhost') || origin.endsWith('.vercel.app')) {
+        callback(null, true);
+      } else {
+        callback(null, allowedOrigins);
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
   }
 });
 
@@ -23,7 +31,13 @@ connectDB();
 
 // Middleware
 app.use(cors({ 
-  origin: allowedOrigins,
+  origin: function(origin, callback) {
+    if (!origin || origin.startsWith('http://localhost') || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(null, allowedOrigins);
+    }
+  },
   credentials: true 
 }));
 app.use(express.json());
