@@ -1,0 +1,210 @@
+.timetable-wrapper {
+  position: relative;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.timetable-grid {
+  display: grid;
+  grid-template-columns: 8% repeat(8, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-width: 700px;
+}
+
+.grid-header {
+  background: var(--bg-secondary);
+  padding: 1.8% 1.5%;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.corner-cell {
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--primary-light);
+}
+
+.time-header {
+  font-size: 0.75rem;
+}
+
+.grid-cell {
+  background: var(--card);
+  padding: 2% 1.5%;
+  min-height: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: var(--transition);
+}
+
+.empty-cell {
+  background: var(--card);
+}
+
+.empty-cell.clickable {
+  cursor: pointer;
+}
+
+.empty-cell.clickable:hover {
+  background: var(--primary-light);
+}
+
+.empty-dot {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  opacity: 0.3;
+  transition: var(--transition);
+}
+
+.empty-cell.clickable:hover .empty-dot {
+  opacity: 0.8;
+  color: var(--primary);
+}
+
+.filled-cell {
+  cursor: default;
+  gap: 0.15rem;
+  text-align: center;
+  border-radius: 0;
+}
+
+.filled-cell:hover {
+  filter: brightness(0.97);
+}
+
+.cell-subject {
+  font-weight: 600;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.cell-info {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.cell-classroom {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.cell-dept {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lab-badge {
+  position: absolute;
+  top: 4%;
+  right: 4%;
+  background: rgba(0, 0, 0, 0.12);
+  color: var(--text-secondary);
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lab-cell {
+  border-right: none;
+}
+
+.allotted-cell {
+  position: relative;
+}
+
+.allot-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+.cell-faculty {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ─── TOOLTIP ─── */
+
+.grid-tooltip {
+  position: fixed;
+  transform: translateX(-50%) translateY(-100%);
+  background: var(--text);
+  color: white;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  z-index: 500;
+  pointer-events: none;
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+}
+
+.grid-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--text);
+}
+
+.tooltip-row {
+  line-height: 1.6;
+}
+
+.tooltip-row strong {
+  color: var(--primary-subtle);
+  margin-right: 0.3rem;
+}
+
+/* ─── RESPONSIVE ─── */
+
+@media (max-width: 768px) {
+  .timetable-grid {
+    grid-template-columns: 12% repeat(8, minmax(70px, 1fr));
+    min-width: 600px;
+  }
+
+  .grid-cell {
+    min-height: 4rem;
+    padding: 2% 1%;
+  }
+
+  .cell-subject {
+    font-size: 0.7rem;
+  }
+}

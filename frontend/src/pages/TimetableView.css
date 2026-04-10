@@ -1,0 +1,43 @@
+.current-classroom {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.9rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ─── DEPARTMENT TIMETABLE LIST ─── */
+
+.dept-timetable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dept-batch-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.dept-batch-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.8rem 0;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--primary);
+}
+
+.dept-batch-icon {
+  font-size: 1.1rem;
+}
