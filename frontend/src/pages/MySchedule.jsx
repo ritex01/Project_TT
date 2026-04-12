@@ -9,9 +9,10 @@ import { DAYS } from '../components/TimetableGrid';
 import './MySchedule.css';
 
 const MySchedule = () => {
-  const { user } = useAuth();
+  const { user, systemSettings } = useAuth();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const timeSlots = systemSettings?.timeSlots || Array.from({length: 8}, (_,i)=>({slot:i, label:`${i+9}:00`}));
 
   const fetchSchedule = async () => {
     try {
@@ -46,19 +47,28 @@ const MySchedule = () => {
     doc.setTextColor(100);
     doc.text(`${user?.authId} · Generated: ${new Date().toLocaleDateString()}`, 14, 22);
 
-    const timeLabels = ['9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00', '4:00'];
+    const timeLabels = timeSlots.map(t => t.label);
     const tableHead = [['Day', ...timeLabels]];
     const tableBody = DAYS.map(day => {
       const row = [day];
-      for (let s = 0; s < 8; s++) {
-        const e = entries.find(en => en.day === day && en.timeSlot === s && !en.isSecondSlot);
-        if (e) {
-          const batchSection = e.batch
-            ? `${e.batch} (${e.section}${e.subsection ? '-' + e.subsection : ''})`
-            : `${e.department?.name || ''} (${e.section}${e.subsection ? '-' + e.subsection : ''})`;
-          const labNote = e.type === 'lab' ? ' [LAB]' : '';
-          row.push(`${e.subject || '-'}\n${e.faculty?.name || ''}\n${batchSection}${labNote}`);
-          if (e.type === 'lab') { s++; row.push('↔'); }
+      for (let s = 0; s < timeSlots.length; s++) {
+        const slotEntries = entries.filter(en => en.day === day && en.timeSlot === s && !en.isSecondSlot);
+        if (slotEntries.length > 0) {
+          const cellText = slotEntries.map(e => {
+            const batchSection = e.batch
+              ? `Yr${e.year} ${e.batch} (${e.section}${e.subsection ? '-' + e.subsection : ''})`
+              : `Yr${e.year} ${e.department?.name || ''} (${e.section}${e.subsection ? '-' + e.subsection : ''})`;
+            const labNote = e.type === 'lab' ? ' [LAB]' : '';
+            return `${e.subject || '-'}\n${e.faculty?.name || ''}\n${batchSection}${labNote}`;
+          }).join('\n---------------------\n');
+          
+          const isLab = slotEntries.some(e => e.type === 'lab');
+          if (isLab) { 
+            s++; 
+            row.push({ content: cellText, colSpan: 2 }); 
+          } else {
+            row.push({ content: cellText });
+          }
         } else {
           row.push('-');
         }

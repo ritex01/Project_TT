@@ -7,20 +7,25 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [systemSettings, setSystemSettings] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      api.get('/auth/me')
-        .then(res => {
-          setUser(res.data.user);
+      Promise.all([
+        api.get('/auth/me'),
+        api.get('/common/settings')
+      ]).then(([userRes, settingsRes]) => {
+          setUser(userRes.data.user);
+          setSystemSettings(settingsRes.data);
         })
         .catch(() => {
           localStorage.removeItem('token');
           setToken(null);
           setUser(null);
+          setSystemSettings(null);
         })
         .finally(() => setLoading(false));
     } else {
@@ -35,6 +40,13 @@ export const AuthProvider = ({ children }) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     setToken(newToken);
     setUser(userData);
+    
+    // Also fetch settings
+    try {
+      const settingsRes = await api.get('/common/settings');
+      setSystemSettings(settingsRes.data);
+    } catch(e) {}
+    
     return userData;
   };
 
@@ -54,7 +66,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, systemSettings, setSystemSettings }}>
       {children}
     </AuthContext.Provider>
   );

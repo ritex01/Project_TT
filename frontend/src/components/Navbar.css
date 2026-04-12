@@ -1,20 +1,24 @@
 .navbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(42px);
+  -webkit-backdrop-filter: blur(42px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-lg);
   position: sticky;
-  top: 0;
+  top: 1rem;
   z-index: 100;
+  width: 96%;
+  max-width: 1400px;
+  margin: 1rem auto;
 }
 
 .navbar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 94%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0.6rem 0;
+  width: 100%;
+  padding: 0.6rem 1rem;
   gap: 2%;
 }
 

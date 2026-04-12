@@ -7,7 +7,7 @@ const allotmentSchema = new mongoose.Schema({
     enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     required: true
   },
-  timeSlot: { type: Number, min: 0, max: 7, required: true },
+  timeSlot: { type: Number, min: 0, required: true },
   department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department', required: true },
   allottedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, { timestamps: true });

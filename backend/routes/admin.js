@@ -31,4 +31,7 @@ router.delete('/allotments/:id', ctrl.removeAllotment);
 router.post('/timetable', ctrl.createEntry);
 router.delete('/timetable/:id', ctrl.deleteEntry);
 
+// Settings
+router.put('/settings', ctrl.updateSettings);
+
 module.exports = router;

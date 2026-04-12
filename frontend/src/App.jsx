@@ -11,6 +11,7 @@ import ManageDepartments from './pages/ManageDepartments';
 import ManageUsers from './pages/ManageUsers';
 import MySchedule from './pages/MySchedule';
 import AwaitingApproval from './pages/AwaitingApproval';
+import Settings from './pages/Settings';
 import './App.css';
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
           <Route path="/manage/classrooms" element={<ProtectedRoute roles={['admin']}>{isPending ? <AwaitingApproval /> : <ManageClassrooms />}</ProtectedRoute>} />
           <Route path="/manage/departments" element={<ProtectedRoute roles={['admin']}>{isPending ? <AwaitingApproval /> : <ManageDepartments />}</ProtectedRoute>} />
           <Route path="/manage/users" element={<ProtectedRoute roles={['admin']}>{isPending ? <AwaitingApproval /> : <ManageUsers />}</ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute roles={['admin']}>{isPending ? <AwaitingApproval /> : <Settings />}</ProtectedRoute>} />
 
           <Route path="/" element={<Navigate to={user ? '/dashboard' : '/login'} />} />
           <Route path="*" element={<Navigate to="/" />} />

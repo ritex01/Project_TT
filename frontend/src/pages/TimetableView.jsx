@@ -6,16 +6,17 @@ import TimetableGrid from '../components/TimetableGrid';
 import FilterPanel from '../components/FilterPanel';
 import EntryModal from '../components/EntryModal';
 import AllotmentModal from '../components/AllotmentModal';
-import { DAYS, TIME_SLOTS } from '../components/TimetableGrid';
+import { DAYS } from '../components/TimetableGrid';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import './TimetableView.css';
 
 const TimetableView = () => {
-  const { user } = useAuth();
+  const { user, systemSettings } = useAuth();
   const isAdmin = user?.role === 'admin';
   const isHod = user?.role === 'hod';
   const canEdit = isAdmin || isHod;
+  const timeSlots = systemSettings?.timeSlots || Array.from({length: 8}, (_,i)=>({slot:i, label:`${i+9}:00`}));
 
   const [entries, setEntries] = useState([]);
   const [allotments, setAllotments] = useState([]);
@@ -142,25 +143,34 @@ const TimetableView = () => {
 
   const buildPdfRow = (day, entryList) => {
     const row = [day];
-    for (let s = 0; s < 8; s++) {
-      const e = entryList.find(en => en.day === day && en.timeSlot === s && !en.isSecondSlot);
-      if (e) {
-        const batchSection = e.batch
-          ? `${e.batch} (${e.section}${e.subsection ? '-' + e.subsection : ''})`
-          : `${e.department?.name || ''} (${e.section}${e.subsection ? '-' + e.subsection : ''})`;
-        const labNote = e.type === 'lab' ? ' [LAB]' : '';
-        row.push(`${e.subject || '-'}\n${e.faculty?.name || ''}\n${batchSection}${labNote}`);
-        if (e.type === 'lab') { s++; row.push('↔'); }
+    for (let s = 0; s < timeSlots.length; s++) {
+      const slotEntries = entryList.filter(en => en.day === day && en.timeSlot === s && !en.isSecondSlot);
+      if (slotEntries.length > 0) {
+        // If there are multiple entries for a single slot, join them with a dashed line
+        const cellText = slotEntries.map(e => {
+          const batchSection = e.batch
+            ? `Yr${e.year} ${e.batch} (${e.section}${e.subsection ? '-' + e.subsection : ''})`
+            : `Yr${e.year} ${e.department?.name || ''} (${e.section}${e.subsection ? '-' + e.subsection : ''})`;
+          const labNote = e.type === 'lab' ? ' [LAB]' : '';
+          return `${e.subject || '-'}\n${e.faculty?.name || ''}\n${batchSection}${labNote}`;
+        }).join('\n-----------------------\n');
+        
+        const isLab = slotEntries.some(e => e.type === 'lab');
+        if (isLab) { 
+          s++; // skip next slot
+          row.push({ content: cellText, colSpan: 2 });
+        } else {
+          row.push({ content: cellText });
+        }
       } else {
-        const secondSlot = entryList.find(en => en.day === day && en.timeSlot === s && en.isSecondSlot);
-        row.push(secondSlot ? '↔' : '-');
+        row.push('-');
       }
     }
     return row;
   };
 
   const addTimetableToDoc = (doc, title, entryList, startY) => {
-    const timeLabels = ['9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00', '4:00'];
+    const timeLabels = timeSlots.map(t => t.label);
     const tableHead = [['Day', ...timeLabels]];
     const tableBody = DAYS.map(day => buildPdfRow(day, entryList));
 

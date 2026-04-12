@@ -29,6 +29,7 @@ const Navbar = () => {
               <Link to="/manage/classrooms" className={isActive('/manage/classrooms')}>Classrooms</Link>
               <Link to="/manage/departments" className={isActive('/manage/departments')}>Departments</Link>
               <Link to="/manage/users" className={isActive('/manage/users')}>Users</Link>
+              <Link to="/settings" className={isActive('/settings')}>Settings</Link>
             </>
           )}
         </div>

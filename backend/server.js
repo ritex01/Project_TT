@@ -26,8 +26,26 @@ const io = new Server(server, {
   }
 });
 
+const SystemSettings = require('./models/SystemSettings');
+
 // Connect to MongoDB
-connectDB();
+connectDB().then(async () => {
+  try {
+    const settings = await SystemSettings.findOne();
+    if (!settings) {
+      await SystemSettings.create({
+        timeSlots: [
+          { slot: 0, label: '9:00' }, { slot: 1, label: '10:00' }, { slot: 2, label: '11:00' }, 
+          { slot: 3, label: '12:00' }, { slot: 4, label: '1:00' }, { slot: 5, label: '2:00' },
+          { slot: 6, label: '3:00' }, { slot: 7, label: '4:00' }
+        ]
+      });
+      console.log('Default SystemSettings seeded');
+    }
+  } catch (err) {
+    console.error('Failed to seed system settings', err);
+  }
+});
 
 // Middleware
 app.use(cors({ 

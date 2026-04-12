@@ -24,13 +24,13 @@
 
 .stat-card {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 5% 4%;
   display: flex;
   align-items: center;
   gap: 4%;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-lg);
   transition: var(--transition);
 }
 
@@ -91,17 +91,16 @@
   gap: 0.6rem;
   padding: 5% 3%;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   text-decoration: none;
   transition: var(--transition);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .action-card:hover {
-  border-color: var(--primary);
   background: var(--primary-light);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
 }
 

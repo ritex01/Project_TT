@@ -3,7 +3,7 @@ const Classroom = require('../models/Classroom');
 const Department = require('../models/Department');
 const User = require('../models/User');
 const Allotment = require('../models/Allotment');
-
+const SystemSettings = require('../models/SystemSettings');
 // ─── GET TIMETABLE (filterable) ───
 
 exports.getTimetable = async (req, res) => {
@@ -69,6 +69,7 @@ exports.getFaculty = async (req, res) => {
       // If no department filter, show everyone
     } else {
       filter.role = { $in: ['faculty', 'hod'] };
+      filter.approved = true;
       if (req.query.department) filter.department = req.query.department;
     }
 
@@ -139,6 +140,22 @@ exports.getStats = async (req, res) => {
     }
 
     res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getSettings = async (req, res) => {
+  try {
+    let settings = await SystemSettings.findOne();
+    if (!settings) {
+      settings = { timeSlots: [
+        { slot: 0, label: '9:00' }, { slot: 1, label: '10:00' }, { slot: 2, label: '11:00' }, 
+        { slot: 3, label: '12:00' }, { slot: 4, label: '1:00' }, { slot: 5, label: '2:00' },
+        { slot: 6, label: '3:00' }, { slot: 7, label: '4:00' }
+      ]};
+    }
+    res.json(settings);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

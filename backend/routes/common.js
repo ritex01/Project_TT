@@ -13,5 +13,5 @@ router.get('/faculty', requireApproval, ctrl.getFaculty);
 router.get('/allotments', requireApproval, ctrl.getAllotments);
 router.get('/my-schedule', requireApproval, ctrl.getMySchedule);
 router.get('/stats', ctrl.getStats);
-
+router.get('/settings', ctrl.getSettings);
 module.exports = router;

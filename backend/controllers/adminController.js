@@ -3,7 +3,7 @@ const Department = require('../models/Department');
 const User = require('../models/User');
 const TimetableEntry = require('../models/TimetableEntry');
 const Allotment = require('../models/Allotment');
-
+const SystemSettings = require('../models/SystemSettings');
 // ─── CLASSROOMS ───
 
 exports.createClassroom = async (req, res) => {
@@ -219,8 +219,11 @@ exports.createEntry = async (req, res) => {
 
     const slotsToCreate = type === 'lab' ? [timeSlot, timeSlot + 1] : [timeSlot];
 
-    if (type === 'lab' && timeSlot > 6) {
-      return res.status(400).json({ message: 'Lab requires 2 consecutive slots. Cannot start at the last time slot.' });
+    const settings = await SystemSettings.findOne() || { timeSlots: Array.from({length: 8}, (_,i)=>({slot:i})) };
+    const maxSlot = settings.timeSlots.length - 1;
+
+    if (type === 'lab' && timeSlot + 1 > maxSlot) {
+      return res.status(400).json({ message: 'Lab requires 2 consecutive slots. Exceeds maximum limits.' });
     }
 
     const createdEntries = [];
@@ -266,6 +269,24 @@ exports.deleteEntry = async (req, res) => {
     await TimetableEntry.deleteMany({ _id: { $in: idsToDelete } });
     req.io.emit('timetable:deleted', idsToDelete);
     res.json({ message: 'Entry deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateSettings = async (req, res) => {
+  try {
+    const { timeSlots } = req.body;
+    if (!timeSlots || !Array.isArray(timeSlots)) {
+      return res.status(400).json({ message: 'Invalid settings format' });
+    }
+    const settings = await SystemSettings.findOneAndUpdate(
+      {},
+      { timeSlots },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    req.io.emit('settings:updated', settings);
+    res.json(settings);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
