@@ -98,7 +98,8 @@ const TimetableGrid = ({
           flexDirection: 'column',
           overflow: 'hidden',
           background: 'transparent',
-          borderLeft: 'none'
+          borderLeft: 'none',
+          alignItems: 'stretch'
         }}
         onClick={() => cellEditable && onCellClick?.(day, slot, renderableEntries[0])}
       >
@@ -109,15 +110,16 @@ const TimetableGrid = ({
               key={entry._id || idx}
               className="split-entry"
               style={{
-                background: `${color}12`,
-                borderLeft: `3px solid ${color}`,
+                background: `${color}30`,
+                borderLeft: `4px solid ${color}`,
                 borderBottom: idx < renderableEntries.length - 1 ? '1px solid var(--border)' : 'none',
                 flex: 1,
-                padding: '0.4rem',
-                minHeight: 0,
+                padding: '0.4rem 0.5rem',
+                minHeight: '5rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                alignItems: 'center',
                 position: 'relative'
               }}
               onMouseEnter={(e) => handleMouseEnter(e, entry)}

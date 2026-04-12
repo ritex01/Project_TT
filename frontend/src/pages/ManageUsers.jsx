@@ -139,14 +139,14 @@ const ManageUsers = () => {
                       onClick={() => handleApprove(u._id, u.name)}
                       disabled={actionInProgress === u._id}
                     >
-                      {actionInProgress === u._id ? '...' : '✓ Approve'}
+                      {actionInProgress === u._id ? '...' : 'Approve'}
                     </button>
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => handleReject(u._id, u.name)}
                       disabled={actionInProgress === u._id}
                     >
-                      {actionInProgress === u._id ? '...' : '✗ Reject'}
+                      {actionInProgress === u._id ? '...' : 'Reject'}
                     </button>
                   </td>
                 </tr>
