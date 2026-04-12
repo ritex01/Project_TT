@@ -102,7 +102,9 @@ exports.login = async (req, res) => {
         role: user.role,
         authId: user.authId,
         department: user.department,
-        approved: user.approved
+        approved: user.approved,
+        designation: user.designation || null,
+        phone: user.phone || null
       }
     });
   } catch (err) {
@@ -119,9 +121,55 @@ exports.getMe = async (req, res) => {
       role: req.user.role,
       authId: req.user.authId,
       department: req.user.department,
-      approved: req.user.approved
+      approved: req.user.approved,
+      designation: req.user.designation || null,
+      phone: req.user.phone || null
     }
   });
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, designation, phone, currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (name) user.name = name.trim();
+    if (designation !== undefined) user.designation = designation || null;
+    if (phone !== undefined) user.phone = phone || null;
+
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({ message: 'Current password is required to change password' });
+      }
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Current password is incorrect' });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    await user.save();
+    await user.populate('department');
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        authId: user.authId,
+        department: user.department,
+        approved: user.approved,
+        designation: user.designation,
+        phone: user.phone
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.logout = async (req, res) => {

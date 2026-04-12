@@ -1,12 +1,25 @@
 .app-layout {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
 }
 
 .app-main {
   flex: 1;
-  padding-top: 1%;
+  padding-top: 1rem;
+  min-height: 100vh;
+}
+
+.app-main.with-sidebar {
+  margin-left: 274px;
+  width: calc(100% - 274px);
+}
+
+@media (max-width: 1024px) {
+  .app-main.with-sidebar {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 4rem;
+  }
 }
 
 /* ─── FADE ANIMATION ─── */

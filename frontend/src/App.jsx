@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -12,6 +12,7 @@ import ManageUsers from './pages/ManageUsers';
 import MySchedule from './pages/MySchedule';
 import AwaitingApproval from './pages/AwaitingApproval';
 import Settings from './pages/Settings';
+import Profile from './pages/Profile';
 import './App.css';
 
 function App() {
@@ -30,8 +31,8 @@ function App() {
 
   return (
     <div className="app-layout">
-      {user && <Navbar />}
-      <main className="app-main">
+      {user && <Sidebar />}
+      <main className={`app-main ${user ? 'with-sidebar' : ''}`}>
         <Routes>
           <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
           <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
@@ -56,6 +57,7 @@ function App() {
           <Route path="/manage/departments" element={<ProtectedRoute roles={['admin']}>{isPending ? <AwaitingApproval /> : <ManageDepartments />}</ProtectedRoute>} />
           <Route path="/manage/users" element={<ProtectedRoute roles={['admin']}>{isPending ? <AwaitingApproval /> : <ManageUsers />}</ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute roles={['admin']}>{isPending ? <AwaitingApproval /> : <Settings />}</ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute>{isPending ? <AwaitingApproval /> : <Profile />}</ProtectedRoute>} />
 
           <Route path="/" element={<Navigate to={user ? '/dashboard' : '/login'} />} />
           <Route path="*" element={<Navigate to="/" />} />

@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['admin', 'hod', 'faculty'], required: true },
   authId: { type: String, unique: true, required: true },
   department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department', default: null },
+  designation: { type: String, enum: ['Mr', 'Mrs', 'Ms', 'Dr', 'Prof', null], default: null },
+  phone: { type: String, default: null },
   approved: { type: Boolean, default: false },
   token: { type: String, default: null }
 }, { timestamps: true });
