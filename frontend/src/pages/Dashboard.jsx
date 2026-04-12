@@ -93,15 +93,6 @@ const Dashboard = () => {
           {isAdmin && (
             <>
               <div className="stat-card-v2">
-                <div className="stat-icon-box" style={{ background: 'linear-gradient(310deg, #627594 0%, #A8B8D8 100%)' }}>✅</div>
-                <div className="stat-info">
-                  <span className="stat-label">Approved Users</span>
-                  <div className="stat-number-row">
-                    <span className="stat-number">{stats?.approvedUsers || 0}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="stat-card-v2">
                 <div className="stat-icon-box" style={{ background: 'linear-gradient(310deg, #FF0080 0%, #7928CA 100%)' }}>📎</div>
                 <div className="stat-info">
                   <span className="stat-label">Total Allotments</span>

@@ -4,6 +4,14 @@ import './TimetableGrid.css';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
+const formatYear = (y) => {
+  const n = Number(y);
+  if (n === 1) return '1st Year';
+  if (n === 2) return '2nd Year';
+  if (n === 3) return '3rd Year';
+  return `${n}th Year`;
+};
+
 const TimetableGrid = ({
   entries = [],
   allotments = [],
@@ -118,7 +126,7 @@ const TimetableGrid = ({
               <div className="cell-subject" style={{ color }}>{entry.subject || 'No Subject'}</div>
               <div className="cell-faculty">{entry.faculty?.name || ''}</div>
               <div className="cell-info" style={{ fontSize: '0.65rem' }}>
-                Year {entry.year} . {entry.batch ? `${entry.batch}` : entry.department?.name}
+                {formatYear(entry.year)} . {entry.batch ? `${entry.batch}` : entry.department?.name}
                 {entry.section ? ` (${entry.section}${entry.subsection ? `-${entry.subsection}` : ''})` : ''}
               </div>
               {showClassroom && entry.classroom && (
@@ -181,7 +189,7 @@ const TimetableGrid = ({
             <strong>Faculty:</strong> {tooltip.entry.faculty?.name || 'N/A'}
           </div>
           <div className="tooltip-row">
-            <strong>Batch:</strong> Year {tooltip.entry.year} . {tooltip.entry.batch || tooltip.entry.department?.name || 'N/A'}
+            <strong>Batch:</strong> {formatYear(tooltip.entry.year)} . {tooltip.entry.batch || tooltip.entry.department?.name || 'N/A'}
           </div>
           <div className="tooltip-row">
             <strong>Section:</strong> {tooltip.entry.section}

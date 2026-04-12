@@ -8,6 +8,14 @@ import 'jspdf-autotable';
 import { DAYS } from '../components/TimetableGrid';
 import './MySchedule.css';
 
+const formatYear = (y) => {
+  const n = Number(y);
+  if (n === 1) return '1st Year';
+  if (n === 2) return '2nd Year';
+  if (n === 3) return '3rd Year';
+  return `${n}th Year`;
+};
+
 const MySchedule = () => {
   const { user, systemSettings } = useAuth();
   const [entries, setEntries] = useState([]);
@@ -56,8 +64,8 @@ const MySchedule = () => {
         if (slotEntries.length > 0) {
           const cellText = slotEntries.map(e => {
             const batchSection = e.batch
-              ? `Yr${e.year} ${e.batch} (${e.section}${e.subsection ? '-' + e.subsection : ''})`
-              : `Yr${e.year} ${e.department?.name || ''} (${e.section}${e.subsection ? '-' + e.subsection : ''})`;
+              ? `${formatYear(e.year)} ${e.batch} (${e.section}${e.subsection ? '-' + e.subsection : ''})`
+              : `${formatYear(e.year)} ${e.department?.name || ''} (${e.section}${e.subsection ? '-' + e.subsection : ''})`;
             const labNote = e.type === 'lab' ? ' [LAB]' : '';
             return `${e.subject || '-'}\n${e.faculty?.name || ''}\n${batchSection}${labNote}`;
           }).join('\n---------------------\n');
